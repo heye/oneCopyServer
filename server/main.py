@@ -33,14 +33,18 @@ if __name__ == '__main__':
     except FileNotFoundError:
         print("not running on server")
 
-
+    certPath = os.path.join(certDir, 'fullchain.pem')
+    keyPath = os.path.join(certDir, 'privkey.pem')
+    
+    print("cert path: " + str(certPath))
+    print("key path: " + str(keyPath))
 
     ctx = ssl.SSLContext(protocol=ssl.PROTOCOL_TLSv1_2)
     # ctx.verify_mode = ssl.CERT_REQUIRED
     # ctx.load_verify_locations(os.path.join(CERT_DIR, 'CA.crt'))
     ctx.load_cert_chain(
-        certfile=os.path.join('fullchain.pem'),
-        keyfile=os.path.join('privkey.pem')
+        certfile=certPath,
+        keyfile=keyPath
     )   
     app.run(host=hostAddr, port=443, ssl=ctx, workers=4)
     netProxy.terminate()
