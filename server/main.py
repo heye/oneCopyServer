@@ -24,6 +24,17 @@ if __name__ == '__main__':
     
     hostAddr = '0.0.0.0'
 
+    certDir = ''
+
+    #test if we are running on the server
+    try:
+        with open('is_server', 'r') as isServerFile:
+            certDir = '/etc/letsencrypt/live/azenix.io/'
+    except FileNotFoundError:
+        print("not running on server")
+
+
+
     ctx = ssl.SSLContext(protocol=ssl.PROTOCOL_TLSv1_2)
     # ctx.verify_mode = ssl.CERT_REQUIRED
     # ctx.load_verify_locations(os.path.join(CERT_DIR, 'CA.crt'))
