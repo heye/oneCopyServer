@@ -47,4 +47,3 @@ if __name__ == '__main__':
         keyfile=keyPath
     )   
     app.run(host=hostAddr, port=443, ssl=ctx, workers=4)
-    netProxy.terminate()
