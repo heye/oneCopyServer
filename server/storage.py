@@ -1,5 +1,6 @@
 
 import os
+import base64
 
 def getItem(key:str) -> str:
     
@@ -12,13 +13,16 @@ def getItem(key:str) -> str:
     #open file & write file
     with open(path, 'r') as keyFile:
         line = keyFile.readline()
-        return line
+        return base64.b64decode(bytes(line, 'utf-8')).decode("utf-8") 
     
     return ""
 
 
 
 def storeItem(key:str, val:str) -> bool:
+
+    val = base64.b64encode(bytes(val, 'utf-8'))
+    val = val.decode("utf-8") 
 
     storageDir = "key-storage/"        
     if not os.path.isdir(storageDir):
