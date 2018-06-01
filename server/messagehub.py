@@ -11,10 +11,10 @@ def handleGetKey(message: Dict) -> Dict[any,any]:
     except KeyError:
         return {"err": "malformed_request"}
 
-    if not hasItem(key):
+    if not hasAPIKey(key):
         return {"err": "key_not_found"}
 
-    value = getItem(key)
+    value = getString(key)
 
     return {"value": value}
 
@@ -28,10 +28,10 @@ def handleSetKey(message: Dict) -> Dict[any,any]:
     except KeyError:
         return {"err": "malformed_request"}
 
-    if not hasItem(key):
+    if not hasAPIKey(key):
         return {"err": "key_not_found"}
 
-    value = storeItem(key, value)
+    value = storeString(key, value)
 
     return {"result": value}
 

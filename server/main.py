@@ -6,6 +6,8 @@ import uvloop
 from sanic import Sanic
 from sanic import response
 from server.messagehub import handleMessage
+from server.filehub import handleUpload
+from server.filehub import handleDownload
 
 asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
@@ -16,6 +18,14 @@ app = Sanic()
 @app.route('/', methods=['POST'])
 async def handle_request(request):
     return response.json(handleMessage(request.json))
+
+@app.route('/file/<apikey>', methods=['POST'])
+async def handle_request(request, apikey):
+    return response.json(handleUpload(request.body, apikey))
+
+@app.route('/file/<apikey>/<filename>', methods=['GET'])
+async def handle_request(request, apikey, filename):
+    return await response.file(handleDownload(apikey))
 
 
 if __name__ == '__main__':

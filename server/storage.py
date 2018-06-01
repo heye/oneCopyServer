@@ -1,72 +1,93 @@
 
 import os
 import base64
+import shutil
 
-def getItem(key:str) -> str:
+def read(key:str, name:str) -> bytes:
     
     storageDir = "key-storage/"        
     if not os.path.isdir(storageDir):
         os.makedirs(storageDir)
+    
+    storageDirForKey = storageDir + key        
+    if not os.path.isdir(storageDirForKey):
+        return ""
         
-    path = storageDir + key
+    path = storageDirForKey + "/" + name
 
     #open file & write file
-    with open(path, 'r') as keyFile:
-        line = keyFile.readline()
-        return base64.b64decode(bytes(line, 'utf-8')).decode("utf-8") 
-    
+    with open(path, 'rb') as keyFile:
+        return keyFile.read()    
+
     return ""
 
 
-
-def storeItem(key:str, val:str) -> bool:
-
-    val = base64.b64encode(bytes(val, 'utf-8'))
-    val = val.decode("utf-8") 
-
+def store(key:str, name:str, val:bytes) -> bool:
+    
     storageDir = "key-storage/"        
     if not os.path.isdir(storageDir):
         os.makedirs(storageDir)
+    
+    storageDirForKey = storageDir + key        
+    if not os.path.isdir(storageDirForKey):
+        os.makedirs(storageDirForKey)
         
-    path = storageDir + key
+    path = storageDirForKey + "/" + name
 
     #open file & write file
-    with open(path, 'w') as keyFile:
-        writtenChars = keyFile.write(val)
+    with open(path, 'wb') as keyFile:
+        writtenBytes = keyFile.write(val)
 
-        return writtenChars == len(val)
+        return writtenBytes == len(val)
     
     return False
 
 
-def hasItem(key:str) -> bool:
+def storeString(key:str, val:str) -> bool:
+    return store(key, "string", val.encode('utf8'))
+
+
+def getString(key:str) -> str:
+    fileData = read(key, "string")
+    return str(fileData, 'utf8')
+
+
+def storeFile(key:str, val:bytes) -> bool:
+    return store(key, "file", val)
+
+
+def getFilePath(key:str) -> str:
+    storageDir = "key-storage/"            
+    storageDirForKey = storageDir + key        
+    return storageDirForKey + "/file"
+
+
+def hasAPIKey(key:str) -> bool:
+        
+    storageDir = "key-storage/"        
+    if not os.path.isdir(storageDir):
+        os.makedirs(storageDir)        
+        
+    storageDirForKey = storageDir + key        
+    if not os.path.isdir(storageDirForKey):
+        return False
+    
+    return True
+
+
+def removeAPIKey(key:str) -> bool:
         
     storageDir = "key-storage/"        
     if not os.path.isdir(storageDir):
         os.makedirs(storageDir)
-
-    path = storageDir + key
-
-    try:
-        with open(path, 'r') as keyFile:
-            return True
-    except FileNotFoundError:
+        
+    storageDirForKey = storageDir + key        
+    if not os.path.isdir(storageDirForKey):
         return False
 
-    return False
-
-
-def removeItem(key:str) -> bool:
-        
-    storageDir = "key-storage/"        
-    if not os.path.isdir(storageDir):
-        os.makedirs(storageDir)
-
-    path = storageDir + key
-
     try:
-        os.remove(path)
-    except FileNotFoundError:
+        shutil.rmtree(storageDirForKey)
+    except OSError:
         return False
 
     return True
