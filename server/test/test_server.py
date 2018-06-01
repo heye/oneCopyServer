@@ -70,3 +70,17 @@ class test_server (unittest.TestCase):
         result = handleSetKey(message)
         self.assertEqual(result["err"], "malformed_request")
 
+
+    def test_is_file_flag(self):
+        
+        result = storeISFileFlag("test-key", True)
+        self.assertTrue(result, "failed1")
+        
+        result = getISFileFlag("test-key")
+        self.assertTrue(result, "failed2")
+        
+        result = storeISFileFlag("test-key", False)
+        self.assertTrue(result, "failed3")
+        
+        result = getISFileFlag("test-key")
+        self.assertFalse(result, "failed4")

@@ -16,10 +16,13 @@ def read(key:str, name:str) -> bytes:
     path = storageDirForKey + "/" + name
 
     #open file & write file
-    with open(path, 'rb') as keyFile:
-        return keyFile.read()    
+    try:
+        with open(path, 'rb') as keyFile:
+            return keyFile.read()    
+    except FileNotFoundError:
+        return b""
 
-    return ""
+    return b""
 
 
 def store(key:str, name:str, val:bytes) -> bool:
@@ -37,7 +40,6 @@ def store(key:str, name:str, val:bytes) -> bool:
     #open file & write file
     with open(path, 'wb') as keyFile:
         writtenBytes = keyFile.write(val)
-
         return writtenBytes == len(val)
     
     return False
@@ -60,6 +62,18 @@ def getFilePath(key:str) -> str:
     storageDir = "key-storage/"            
     storageDirForKey = storageDir + key        
     return storageDirForKey + "/file"
+
+
+def storeISFileFlag(key:str, value: bool) -> bool:
+    if value:
+        return store(key, "isFile", "true".encode('utf8'))
+    else:
+        return store(key, "isFile", "false".encode('utf8'))
+
+
+def getISFileFlag(key:str) -> bool:
+    fileData = read(key, "isFile")
+    return str(fileData, 'utf8') == "true"
 
 
 def hasAPIKey(key:str) -> bool:

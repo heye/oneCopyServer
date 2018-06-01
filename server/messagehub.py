@@ -15,8 +15,9 @@ def handleGetKey(message: Dict) -> Dict[any,any]:
         return {"err": "key_not_found"}
 
     value = getString(key)
+    is_file = getISFileFlag(key)
 
-    return {"value": value}
+    return {"value": value, "is_file": is_file}
 
 
 def handleSetKey(message: Dict) -> Dict[any,any]:
@@ -32,6 +33,7 @@ def handleSetKey(message: Dict) -> Dict[any,any]:
         return {"err": "key_not_found"}
 
     value = storeString(key, value)
+    storeISFileFlag(key, False)
 
     return {"result": value}
 

@@ -37,6 +37,7 @@ def handleUpload(data: bytes, apikey: str) -> Dict[any,any]:
         if not storeFile(apikey, data):
             return {"err": "err_writing_file"}
         else:
+            storeISFileFlag(apikey, True)
             return {"result": True}
         
             
