@@ -26,8 +26,8 @@ def handleUpload(data: bytes, apikey: str) -> Dict[any,any]:
     print("file upload for: " + apikey)
     print("size: " + str(dataSize))
 
-    if dataSize > 10000000:
-        return {"err":"file_too_bit"}
+    if dataSize > 100000000:
+        return {"err":"file_too_big"}
 
     reply = {"err": "unkown_type"}
     try:        
