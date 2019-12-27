@@ -1,6 +1,6 @@
 
 from typing import Dict
-from server.storage import *
+from storage import *
 import traceback
 
 
